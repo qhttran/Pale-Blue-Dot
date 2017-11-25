@@ -6,15 +6,25 @@
 package newtonlawofgravity;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+
+import javafx.animation.Interpolator;
+import javafx.animation.PathTransition;
+import javafx.animation.Timeline;
+import javafx.event.ActionEvent;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.GridPane;
 import javafx.scene.control.Slider;
-import javafx.stage.Stage;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.util.Duration;
 
 /**
  *
@@ -30,8 +40,38 @@ public class NewtonLawOfGravity extends Application {
     Button btnCalc;
     
     @Override
-    public void start(Stage primaryStage) {
-      //create components
+    public void start(Stage primaryStage){
+        
+        
+        /*************************Graphic Simulation Pane****************************/
+        Circle circle = new Circle(0, 0, 100);
+        
+        Circle circle2 = new Circle(0, 0, 10);
+        circle2.setFill(Color.BLUE);
+        
+        Circle circle3 = new Circle(0,0, 50);
+        circle3.setFill(Color.ORANGE);
+        
+        PathTransition pathTransition = new PathTransition();
+        pathTransition.setPath(circle);
+        pathTransition.setRate(2);
+        pathTransition.setInterpolator(Interpolator.LINEAR);
+        pathTransition.setDuration(Duration.millis(40000)); //period
+        pathTransition.setNode(circle2);
+        pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
+        pathTransition.setCycleCount(Timeline.INDEFINITE);
+        pathTransition.play();
+        
+        StackPane graphicPane = new StackPane();
+        graphicPane.getChildren().add(circle2);
+        graphicPane.getChildren().add(circle3);
+        graphicPane.setMinHeight(240);
+        graphicPane.setMinWidth(240);
+        graphicPane.setId("graphicPane"); 
+        
+        
+        /***************************Force Calculator Pane****************************/
+        //create components
           // Big G
         lbBigG = new Label("Universal Gravitational Constant (G) = 6.6740 x 10^-11 m^3 kg^-1 s^-2");
           // 1st mass
@@ -85,38 +125,48 @@ public class NewtonLawOfGravity extends Application {
           // set action to button
         btnCalc.setOnAction(e -> actionPerformed(e));       
         
-        GridPane root = new GridPane();
+        GridPane calcPane = new GridPane();
+        calcPane.setId("calcPane"); // for css
         //put container in middle of scene
-        root.setAlignment(Pos.CENTER);
+        calcPane.setAlignment(Pos.CENTER);
         //set spacing between controls in grid
-        root.setHgap(10);
-        root.setVgap(35);
+        calcPane.setHgap(10);
+        calcPane.setVgap(35);
         //add to grid, cell by cell
-        root.add(lbBigG,0,0,4,1); //1st col, 1st row, spans 4 cols
-        root.add(lbM1,0,1); // 1st col, 2nd row
-        root.add(m1Txt,1,1,2,1); // 2nd col, 2nd row, spans 2 cols
-        root.add(m1Unit,3,1);// 3rd col, 2nd row
-        root.add(lbM2,0,2); // 1st col, 3rd row
-        root.add(m2Txt,1,2,2,1); // 2nd col, 3rd row, spans 2 cols
-        root.add(m2Unit,3,2);// 3rd col, 3rd row
-        root.add(lbR,0,3); // 1st col, 4th row
-        root.add(sliderR,1,3,2,1); // 2nd col, 4th row, spans 2 cols
-        root.add(rUnit,3,3); // 3rd col, 4th row
-        root.add(lbForce,0,4); // 1st col, 5th row
-        root.add(lbAnswer,1,4,2,1); // 2nd col, 5th row, spans 2 cols
-        root.add(fUnit,3,4); // 3rd col, 5th row
-        root.add(btnCalc,1,5); // 6th row
-        root.add(lbError,0,6,4,1); //1st col, 7th row, spans 4 cols
+        calcPane.add(lbBigG,0,0,4,1); //1st col, 1st row, spans 4 cols
+        calcPane.add(lbM1,0,1); // 1st col, 2nd row
+        calcPane.add(m1Txt,1,1,2,1); // 2nd col, 2nd row, spans 2 cols
+        calcPane.add(m1Unit,3,1);// 3rd col, 2nd row
+        calcPane.add(lbM2,0,2); // 1st col, 3rd row
+        calcPane.add(m2Txt,1,2,2,1); // 2nd col, 3rd row, spans 2 cols
+        calcPane.add(m2Unit,3,2);// 3rd col, 3rd row
+        calcPane.add(lbR,0,3); // 1st col, 4th row
+        calcPane.add(sliderR,1,3,2,1); // 2nd col, 4th row, spans 2 cols
+        calcPane.add(rUnit,3,3); // 3rd col, 4th row
+        calcPane.add(lbForce,0,4); // 1st col, 5th row
+        calcPane.add(lbAnswer,1,4,2,1); // 2nd col, 5th row, spans 2 cols
+        calcPane.add(fUnit,3,4); // 3rd col, 5th row
+        calcPane.add(btnCalc,2,5); // 6th row
+        calcPane.add(lbError,0,6,4,1); //1st col, 7th row, spans 4 cols
         
         //set widths of all controls in separate method
         setWidths();
         
-        Scene scene = new Scene(root, 550, 500);
         
-        primaryStage.setTitle("Newton's Gravitational Law");
+        /********************************Big General Pane****************************/
+        GridPane bigPane = new GridPane();
+        bigPane.setAlignment(Pos.CENTER);
+        bigPane.add(graphicPane,0,0);
+        bigPane.add(calcPane,1,0);
+        bigPane.setHgap(10);
+        Scene scene = new Scene(bigPane, 1000, 750);
+        scene.getStylesheets().add
+                     (NewtonLawOfGravity.class.getResource("newtonsLaw.css").toExternalForm());
+        
         primaryStage.setScene(scene);
         primaryStage.show();
     }
+ 
     
     public void setWidths(){
           // row 1
@@ -138,7 +188,7 @@ public class NewtonLawOfGravity extends Application {
         lbAnswer.setPrefWidth(210);
         fUnit.setPrefWidth(100);
           // row 6
-        btnCalc.setPrefWidth(100);
+        btnCalc.setPrefWidth(150);
           // row 7
         lbError.setPrefWidth(430);
     }
@@ -162,16 +212,39 @@ public class NewtonLawOfGravity extends Application {
                 }
             }
             catch(InvalidValueException ex){
+                ex.toString();
                 lbError.setText("Invalid Value! Masses can't be zero or negative!");
             }
         }
     }
-
-    /**
-     * @param args the command line arguments
-     */
+    
     public static void main(String[] args) {
         launch(args);
+    }
+    
+    
+    public class InvalidValueException extends IllegalArgumentException{
+    
+        private String msg;
+        private static final String DEFAULT_EXCEPTION_MSG = "INVALID VALUE!";
+
+        public InvalidValueException(){
+            super();
+            msg = new String(DEFAULT_EXCEPTION_MSG );
+        }
+        public InvalidValueException(String msg){
+                    super(msg);
+                    this.msg = new String(msg);
+            }
+
+        @Override
+        public String getMessage(){
+            return new String(msg);
+        }
+        @Override
+        public String toString(){
+            return new String(getClass().getName() + ": " + msg);
+        }
     }
     
 }
