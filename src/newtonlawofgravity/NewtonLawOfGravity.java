@@ -14,13 +14,12 @@ import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.FlowPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -33,11 +32,15 @@ import javafx.util.Duration;
 public class NewtonLawOfGravity extends Application {
     
     private final double BIG_G = 6.674 * Math.pow(10, -11);
+    public final double minDeltaTime = 0.001;
+    public final double maxDeltaTime = 100000.0;
+    double mass1, mass2, distance, force, bigM, period, deltaTime;
     TextField m1Txt, m2Txt;
     Label lbForce, lbBigG, lbM1, lbM2, lbR, lbAnswer, 
             m1Unit, m2Unit, fUnit, rUnit, lbError;
-    Slider sliderR;
+    Slider sliderR, sliderDeltaTime;
     Button btnCalc;
+    PathTransition pathTransition;
     
     @Override
     public void start(Stage primaryStage){
@@ -52,7 +55,9 @@ public class NewtonLawOfGravity extends Application {
         Circle circle3 = new Circle(0,0, 50);
         circle3.setFill(Color.ORANGE);
         
-        PathTransition pathTransition = new PathTransition();
+        sliderDeltaTime = new Slider(minDeltaTime, maxDeltaTime, 1.0);
+        
+        pathTransition = new PathTransition();
         pathTransition.setPath(circle);
         pathTransition.setRate(2);
         pathTransition.setInterpolator(Interpolator.LINEAR);
@@ -68,6 +73,10 @@ public class NewtonLawOfGravity extends Application {
         graphicPane.setMinHeight(240);
         graphicPane.setMinWidth(240);
         graphicPane.setId("graphicPane"); 
+        graphicPane.getChildren().add(sliderDeltaTime);
+        sliderDeltaTime.setOnMouseReleased(e -> mouseReleased(e));
+        
+  
         
         
         /***************************Force Calculator Pane****************************/
@@ -166,7 +175,23 @@ public class NewtonLawOfGravity extends Application {
         primaryStage.setScene(scene);
         primaryStage.show();
     }
- 
+    
+    public double getPeriod(){
+        double period = 0;
+        
+        // compare to find the larger mass
+        if(mass1 > mass2){
+            bigM = mass1;
+        }
+        else{
+            bigM = mass2;
+        }
+        
+        // clac. period in seconds
+        period = (2*Math.PI) * Math.sqrt(Math.pow(distance, 3)/(bigM * BIG_G));
+        
+        return period;
+    }
     
     public void setWidths(){
           // row 1
@@ -193,8 +218,19 @@ public class NewtonLawOfGravity extends Application {
         lbError.setPrefWidth(430);
     }
     
+    public void mouseReleased(MouseEvent e){
+        // TODO Clean up
+        deltaTime = sliderDeltaTime.getValue();
+        System.out.println(deltaTime);
+        
+        //TODO adj. Duration.millis(period * 1000 / deltaTime) based on how the slider value is recorded
+        pathTransition.setDuration(Duration.millis(period * 1000 * deltaTime));
+        System.out.println(period * 1000 * deltaTime);
+        pathTransition.play();
+    }
+    
     public void actionPerformed(ActionEvent e){
-        double mass1, mass2, distance, force;
+
         if(e.getSource() == btnCalc){
             try{
                 
@@ -209,6 +245,12 @@ public class NewtonLawOfGravity extends Application {
                     force = (BIG_G*mass1*mass2)/Math.pow(distance, 2);
                     //display answer
                     lbAnswer.setText("" + force);
+                    
+                    // call the period function
+                    period = getPeriod();
+                    //TODO adj. Duration.millis(period * 1000 / deltaTime) based on how the slider value is recorded
+                    pathTransition.setDuration(Duration.millis(period * 1000 * deltaTime));
+                    pathTransition.playFromStart();
                 }
             }
             catch(InvalidValueException ex){
