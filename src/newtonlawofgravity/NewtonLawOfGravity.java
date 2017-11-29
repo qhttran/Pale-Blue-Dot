@@ -227,8 +227,9 @@ public class NewtonLawOfGravity extends Application {
     
     public void mouseReleased(MouseEvent e){
         // TODO Clean up
+        
         deltaTime = sliderDeltaTime.getValue();
-        System.out.println("Delta Time: " + deltaTime + "Period: " + period);
+        System.out.println("Delta Time: " + deltaTime + " Period: " + period);
         
         //TODO adj. Duration.millis(period * 1000 / deltaTime) based on how the slider value is recorded
         if(deltaTime == 0){
@@ -237,7 +238,7 @@ public class NewtonLawOfGravity extends Application {
         else{
             pathTransition.setDuration(Duration.millis((period * 1000) /  (period * deltaTime)));
         }
-        System.out.println((period * 1000) /  (period * deltaTime));
+        System.out.println("Duration in millisecond: " + (period * 1000) /  (period * deltaTime));
         pathTransition.playFromStart();
     }
     
