@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 package newtonlawofgravity;
-
+// y
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
