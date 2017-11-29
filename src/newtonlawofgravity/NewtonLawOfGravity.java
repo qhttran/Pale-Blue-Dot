@@ -14,7 +14,6 @@ import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
 import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -33,8 +32,8 @@ import javafx.util.Duration;
 public class NewtonLawOfGravity extends Application {
     
     private final double BIG_G = 6.674 * Math.pow(10, -11);
-    public final double minDeltaTime = 0.0;
-    public final double maxDeltaTime = 2.0;
+    public final double minDeltaTime = 0.001;
+    public final double maxDeltaTime = 100000.0;
     double mass1, mass2, distance, force, bigM, period, deltaTime;
     TextField m1Txt, m2Txt;
     Label lbForce, lbBigG, lbM1, lbM2, lbR, lbAnswer, 
@@ -68,19 +67,13 @@ public class NewtonLawOfGravity extends Application {
         pathTransition.setCycleCount(Timeline.INDEFINITE);
         pathTransition.play();
         
-        GridPane graphicPane = new GridPane();
-        StackPane testPane = new StackPane();
-        graphicPane.add(testPane, 0, 0);
-        graphicPane.add(sliderDeltaTime, 0, 1);
-        testPane.getChildren().add(circle2);
-        testPane.getChildren().add(circle3);
+        StackPane graphicPane = new StackPane();
+        graphicPane.getChildren().add(circle2);
+        graphicPane.getChildren().add(circle3);
         graphicPane.setMinHeight(240);
         graphicPane.setMinWidth(240);
-        graphicPane.setAlignment(Pos.CENTER);
         graphicPane.setId("graphicPane"); 
-        // TODO this needs to be calculated based on the radius and outer body so clipping does not occur
-        sliderDeltaTime.setPadding(new Insets(240, 0, 0, 0));
-        // graphicPane.getChildren().add(sliderDeltaTime);
+        graphicPane.getChildren().add(sliderDeltaTime);
         sliderDeltaTime.setOnMouseReleased(e -> mouseReleased(e));
         
   
@@ -228,17 +221,12 @@ public class NewtonLawOfGravity extends Application {
     public void mouseReleased(MouseEvent e){
         // TODO Clean up
         deltaTime = sliderDeltaTime.getValue();
-        System.out.println("Delta Time: " + deltaTime + "Period: " + period);
+        System.out.println(deltaTime);
         
         //TODO adj. Duration.millis(period * 1000 / deltaTime) based on how the slider value is recorded
-        if(deltaTime == 0){
-            pathTransition.setDuration(Duration.millis(period * 1000));
-        }
-        else{
-            pathTransition.setDuration(Duration.millis((period * 1000) /  (period * deltaTime)));
-        }
-        System.out.println((period * 1000) /  (period * deltaTime));
-        pathTransition.playFromStart();
+        pathTransition.setDuration(Duration.millis(period * 1000 * deltaTime));
+        System.out.println(period * 1000 * deltaTime);
+        pathTransition.play();
     }
     
     public void actionPerformed(ActionEvent e){
