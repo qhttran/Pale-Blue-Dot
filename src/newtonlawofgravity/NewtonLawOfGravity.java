@@ -1,10 +1,15 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/*********************BIG SECTION LABEL*******************/
+/*********************************************************/
 
-/*-- For debugging purposes, to be deleted later --*/
+/*********************SMALL SECTION LABEL*******************/
+
+/*--- For debugging purposes, to be deleted later ---*/
+
+//++ TODO
+
+/*<< Explaining the method>>*/
+
+// explaining detail
 
 package newtonlawofgravity;
 
@@ -29,10 +34,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.util.Duration;
 
-/**
- *
- * @author Quyen
- */
+
 public class NewtonLawOfGravity extends Application {
     
     private static final double BIG_G = 6.674 * Math.pow(10, -11);
@@ -54,7 +56,8 @@ public class NewtonLawOfGravity extends Application {
     public void start(Stage primaryStage){
         
         
-        /*************************Graphic Simulation Pane****************************/
+      /*************************GRAPHIC SIMULATION PANE****************************/
+      /****************************************************************************/
         Circle circle = new Circle(0, 0, 100);
         
         Circle circle2 = new Circle(0, 0, 10);
@@ -74,13 +77,10 @@ public class NewtonLawOfGravity extends Application {
         
         pathTransition = new PathTransition();
         pathTransition.setPath(circle);
-        //pathTransition.setRate(2);
         pathTransition.setInterpolator(Interpolator.LINEAR);
-        //pathTransition.setDuration(Duration.millis(40000)); //period
         pathTransition.setNode(circle2);
         pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
         pathTransition.setCycleCount(Timeline.INDEFINITE);
-        //pathTransition.play();
         
         GridPane graphicPane = new GridPane();
         StackPane testPane = new StackPane();
@@ -90,21 +90,24 @@ public class NewtonLawOfGravity extends Application {
         graphicPane.add(btnPause, 0, 3);
         testPane.getChildren().add(circle2);
         testPane.getChildren().add(circle3);
-        graphicPane.setMinHeight(240);
-        graphicPane.setMinWidth(240);
+        graphicPane.setMinWidth(300);
         graphicPane.setAlignment(Pos.CENTER);
         graphicPane.setId("graphicPane"); // for css
-        // TODO this needs to be calculated based on the radius and outer body so clipping does not occur
-        sliderDeltaTime.setPadding(new Insets(240, 0, 0, 0));
         
+      //++ TODO this needs to be calculated based on the radius and outer body so clipping does not occur
+        sliderDeltaTime.setPadding(new Insets(240, 0, 0, 0));       
+      /****************************************************************************/
+      /****************************************************************************/
         
   
         
         
-        /***************************Force Calculator Pane****************************/
-        //create components
+      /***************************FORCE CALCULATOR PANE****************************/
+      /****************************************************************************/
+        /**********CREATE COMPONENTS**********/
           // Big G
-        lbBigG = new Label("Universal Gravitational Constant (G) = 6.6740 x 10^-11 m^3 kg^-1 s^-2");
+        lbBigG = new Label("Universal Gravitational Constant (G) "
+                + "= 6.6740 x 10^-11 m^3 kg^-1 s^-2");
           // 1st mass
         lbM1 = new Label("Mass 1 = ");
         m1Txt = new TextField();
@@ -121,10 +124,12 @@ public class NewtonLawOfGravity extends Application {
         lbForce = new Label("Force G = ");
         lbAnswer = new Label("?");
         fUnit = new Label("N"); 
-        
-        btnCalc = new Button("Calculate");
+          // other
         lbError = new Label("");
-      // center text in label
+        btnCalc = new Button("Calculate");
+        btnCalc.setOnAction(e -> actionPerformed(e));
+        
+        /**********CENTER TEXT IN LABEL**********/
         lbForce.setAlignment(Pos.CENTER_LEFT);
         lbAnswer.setAlignment(Pos.CENTER);
         lbBigG.setAlignment(Pos.CENTER);
@@ -136,7 +141,8 @@ public class NewtonLawOfGravity extends Application {
         rUnit.setAlignment(Pos.CENTER);
         fUnit.setAlignment(Pos.CENTER);
         lbError.setAlignment(Pos.CENTER);
-          // apply css-like style to label
+        
+        /**********APPLY SIMPLE BORDER BY CSS**********/
         lbForce.setStyle("-fx-border-color: #C0C0C0; -fx-padding: 10px;");
         lbAnswer.setStyle("-fx-border-color: #C0C0C0; -fx-padding: 10px;");
         lbBigG.setStyle("-fx-border-color: #C0C0C0; -fx-padding: 10px;");
@@ -148,22 +154,22 @@ public class NewtonLawOfGravity extends Application {
         rUnit.setStyle("-fx-padding: 10px;");
         fUnit.setStyle("-fx-padding: 10px;");
         lbError.setStyle("-fx-color: red");
-          // set slider style
+        
+        /**********STYLING FOR DISTANCE SLIDER**********/
         sliderR.setShowTickMarks(true);
         sliderR.setShowTickLabels(true);
         sliderR.setValueChanging(true);
         sliderR.setMajorTickUnit(10);
-          // set action to button
-        btnCalc.setOnAction(e -> actionPerformed(e));       
+             
         
         GridPane calcPane = new GridPane();
         calcPane.setId("calcPane"); // for css
-        //put container in middle of scene
+      //put container in middle of scene
         calcPane.setAlignment(Pos.CENTER);
-        //set spacing between controls in grid
+      //set spacing between controls in grid
         calcPane.setHgap(10);
         calcPane.setVgap(35);
-        //add to grid, cell by cell
+      //add to grid, cell by cell
         calcPane.add(lbBigG,0,0,4,1); //1st col, 1st row, spans 4 cols
         calcPane.add(lbM1,0,1); // 1st col, 2nd row
         calcPane.add(m1Txt,1,1,2,1); // 2nd col, 2nd row, spans 2 cols
@@ -180,42 +186,32 @@ public class NewtonLawOfGravity extends Application {
         calcPane.add(btnCalc,2,5); // 6th row
         calcPane.add(lbError,0,6,4,1); //1st col, 7th row, spans 4 cols
         
-        //set widths of all controls in separate method
-        setWidths();
+      //set widths of all controls in separate method
+        setWidths();      
+      /****************************************************************************/
+      /****************************************************************************/
         
         
-        /********************************Big General Pane****************************/ 
-        
+      /********************************BIG GENERAL PANE****************************/ 
+      /****************************************************************************/       
         GridPane bigPane = new GridPane();
         bigPane.setAlignment(Pos.CENTER);
         bigPane.add(graphicPane,0,0);
         bigPane.add(calcPane,1,0);
         bigPane.setHgap(10);
         Scene scene = new Scene(bigPane, 1000, 750);
+        bigPane.setMinSize(1000, 750);
         scene.getStylesheets().add
                      (NewtonLawOfGravity.class.getResource("newtonsLaw.css").toExternalForm());
         
         primaryStage.setScene(scene);
-        primaryStage.show();
+        primaryStage.show();     
+      /****************************************************************************/
+      /****************************************************************************/
     }
+ 
     
-    public static double getPeriod(){
-        double p;
-        
-        // compare to find the larger mass
-        if(mass1 > mass2){
-            bigM = mass1;
-        }
-        else{
-            bigM = mass2;
-        }
-        
-        // clac. period in seconds
-        p = (2*Math.PI) * Math.sqrt(Math.pow(distance, 3)/(bigM * BIG_G));
-        
-        return p;
-    }
-    
+  /*<< set width for all the controls in the calcPane >>*/
     public void setWidths(){
           // row 1
         lbBigG.setPrefWidth(430); 
@@ -241,13 +237,32 @@ public class NewtonLawOfGravity extends Application {
         lbError.setPrefWidth(430);
     }
     
+    
+  /*<< Calculate and return the appropriate period (orbiting speed) >>*/
+    public static double getPeriod(){      
+      // compare to find the larger mass
+        if(mass1 > mass2){
+            bigM = mass1;
+        }
+        else{
+            bigM = mass2;
+        }
+        
+      // calc period in seconds
+        double p = (2*Math.PI) * Math.sqrt(Math.pow(distance, 3)/(bigM * BIG_G));     
+        return p;
+    }
+    
+    
+    /*<< Controlling the time slider to speed up/slow down period >>*/
     public void mouseReleased(MouseEvent e){
-        // TODO Clean up
-        
+        //++ TODO Clean up      
         deltaTime = sliderDeltaTime.getValue();
-        System.out.println("Delta Time mouseReleased: " + deltaTime + " Period mouseReleased: " + period);
+        /*---System.out.println("Delta Time mouseReleased: " + deltaTime 
+            + " Period mouseReleased: " + period);---*/
         
-        //TODO adj. Duration.millis(period * 1000 / deltaTime) based on how the slider value is recorded
+      //++ TODO adj. Duration.millis(period * 1000 / deltaTime) 
+      //++based on how the slider value is recorded
         if(deltaTime == 0){
             pathTransition.setDuration(Duration.millis(period * 1000));
         }
@@ -258,9 +273,10 @@ public class NewtonLawOfGravity extends Application {
         pathTransition.playFromStart();
     }
     
+    
+    /*<< So far: controlling buttons: Calculate, Play, and Pause >>*/
     public void actionPerformed(ActionEvent e){
-
-            /*----------FOR btnCalc/CALCULATING FORCE-------------*/
+      /******************FOR btnCalc/CALCULATING FORCE******************/
         if(e.getSource() == btnCalc){
             try{
                 
@@ -274,7 +290,6 @@ public class NewtonLawOfGravity extends Application {
                     mass2 = Double.parseDouble(m2Txt.getText());
                     distance = sliderR.getValue();
                     force = (BIG_G*mass1*mass2)/Math.pow(distance, 2);
-                    //display answer
                     lbAnswer.setText("" + force);                  
                 }
             }
@@ -284,6 +299,7 @@ public class NewtonLawOfGravity extends Application {
                         + "and cannot be zero or negative ");
             }
         }
+      /*****************************************************************/
         
         else if(e.getSource() == btnPlay){
             playbtnPerformed();
@@ -293,6 +309,8 @@ public class NewtonLawOfGravity extends Application {
         }
     }
     
+    
+    /*<< Exclusively used to control Play button >>*/
     public static void playbtnPerformed(){
         if(m1Txt.getText().equals("") || m2Txt.getText().equals("")){
             mass1 = DEFAULT_MASS_1;
@@ -301,13 +319,12 @@ public class NewtonLawOfGravity extends Application {
             m2Txt.setText("" + DEFAULT_MASS_2);
             distance = sliderR.getValue();
             force = (BIG_G*mass1*mass2)/Math.pow(distance, 2);
-                    //display answer
             lbAnswer.setText("" + force);
             
             period = getPeriod();
-            System.out.println("Period: " + period);
+            /*---System.out.println("Period: " + period);
             System.out.println("Big mass: " + bigM);
-            System.out.println("Distance: " + distance);
+            System.out.println("Distance: " + distance);---*/
            
         }
         else{
@@ -316,17 +333,15 @@ public class NewtonLawOfGravity extends Application {
             
             period = getPeriod();
         }
-        //TODO adj. Duration.millis(period * 1000 / deltaTime) based on how the slider value is recorded
-        pathTransition.setDuration(Duration.millis(period * 1000 * deltaTime));
-        System.out.println("Duration after hit play button: " + period * 1000 * deltaTime);
-        pathTransition.playFromStart();
-    }
-    
-    public static void main(String[] args) {
-        launch(args);
+        
+      //++ TODO adj. Duration.millis(period * 1000 / deltaTime) based on how the slider value is recorded
+        pathTransition.setDuration(Duration.millis((period * 1000) /  (period * deltaTime)));
+        System.out.println("Duration after hit play button: " + (period * 1000) /  (period * deltaTime));
+        pathTransition.play();
     }
     
     
+    /*<< Throw an exception when the user tries to enter illegal values >>*/ 
     public class InvalidValueException extends IllegalArgumentException{
     
         private String msg;
@@ -349,6 +364,23 @@ public class NewtonLawOfGravity extends Application {
         public String toString(){
             return new String(getClass().getName() + ": " + msg);
         }
-    }
+    }  
     
+    
+    public static void main(String[] args) {
+        launch(args);
+    }
 }
+
+
+/* ############# QUYEN'S TO-DOs ##############
+- Re-arrange the content's layout
+- Add 2 labels to display the "real" period vs the "adjusted" period.
+- Style the GUI with CSS
+*/
+
+/* ############# KASIN'S TO-DOs ##############
+- Rewrite the period/duration calculating function if needed
+- Add pop-up windows for 2 planets
+- 
+*/
