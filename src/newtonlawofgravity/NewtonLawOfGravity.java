@@ -3,6 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
+/*-- For debugging purposes, to be deleted later --*/
+
 package newtonlawofgravity;
 
 import javafx.application.Application;
@@ -32,16 +35,20 @@ import javafx.util.Duration;
  */
 public class NewtonLawOfGravity extends Application {
     
-    private final double BIG_G = 6.674 * Math.pow(10, -11);
+    private static final double BIG_G = 6.674 * Math.pow(10, -11);
     public final double minDeltaTime = 0.0;
     public final double maxDeltaTime = 2.0;
-    double mass1, mass2, distance, force, bigM, period, deltaTime;
-    TextField m1Txt, m2Txt;
-    Label lbForce, lbBigG, lbM1, lbM2, lbR, lbAnswer, 
+    public static final double DEFAULT_MASS_1 = 1000;
+    public static final double DEFAULT_MASS_2 = 10000;
+    
+    static double mass1, mass2, distance, force, bigM, period, 
+            deltaTime = 1.0; // default "speed"
+    static TextField m1Txt, m2Txt, periodTxt, adjPeriod_Txt;
+    static Label lbForce, lbBigG, lbM1, lbM2, lbR, lbAnswer, 
             m1Unit, m2Unit, fUnit, rUnit, lbError;
-    Slider sliderR, sliderDeltaTime;
-    Button btnCalc;
-    PathTransition pathTransition;
+    static Slider sliderR, sliderDeltaTime;
+    static Button btnCalc, btnPlay, btnPause;
+    static PathTransition pathTransition;
     
     @Override
     public void start(Stage primaryStage){
@@ -57,31 +64,39 @@ public class NewtonLawOfGravity extends Application {
         circle3.setFill(Color.ORANGE);
         
         sliderDeltaTime = new Slider(minDeltaTime, maxDeltaTime, 1.0);
+        sliderDeltaTime.setOnMouseReleased(e -> mouseReleased(e));
+        
+        btnPlay = new Button("Play");
+        btnPlay.setOnAction(e -> actionPerformed(e));  
+        
+        btnPause = new Button("Pause");
+        btnPause.setOnAction(e -> actionPerformed(e)); 
         
         pathTransition = new PathTransition();
         pathTransition.setPath(circle);
-        pathTransition.setRate(2);
+        //pathTransition.setRate(2);
         pathTransition.setInterpolator(Interpolator.LINEAR);
-        pathTransition.setDuration(Duration.millis(40000)); //period
+        //pathTransition.setDuration(Duration.millis(40000)); //period
         pathTransition.setNode(circle2);
         pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
         pathTransition.setCycleCount(Timeline.INDEFINITE);
-        pathTransition.play();
+        //pathTransition.play();
         
         GridPane graphicPane = new GridPane();
         StackPane testPane = new StackPane();
         graphicPane.add(testPane, 0, 0);
         graphicPane.add(sliderDeltaTime, 0, 1);
+        graphicPane.add(btnPlay, 0, 2);
+        graphicPane.add(btnPause, 0, 3);
         testPane.getChildren().add(circle2);
         testPane.getChildren().add(circle3);
         graphicPane.setMinHeight(240);
         graphicPane.setMinWidth(240);
         graphicPane.setAlignment(Pos.CENTER);
-        graphicPane.setId("graphicPane"); 
+        graphicPane.setId("graphicPane"); // for css
         // TODO this needs to be calculated based on the radius and outer body so clipping does not occur
         sliderDeltaTime.setPadding(new Insets(240, 0, 0, 0));
-        // graphicPane.getChildren().add(sliderDeltaTime);
-        sliderDeltaTime.setOnMouseReleased(e -> mouseReleased(e));
+        
         
   
         
@@ -169,7 +184,8 @@ public class NewtonLawOfGravity extends Application {
         setWidths();
         
         
-        /********************************Big General Pane****************************/
+        /********************************Big General Pane****************************/ 
+        
         GridPane bigPane = new GridPane();
         bigPane.setAlignment(Pos.CENTER);
         bigPane.add(graphicPane,0,0);
@@ -183,8 +199,8 @@ public class NewtonLawOfGravity extends Application {
         primaryStage.show();
     }
     
-    public double getPeriod(){
-        double period = 0;
+    public static double getPeriod(){
+        double p;
         
         // compare to find the larger mass
         if(mass1 > mass2){
@@ -195,9 +211,9 @@ public class NewtonLawOfGravity extends Application {
         }
         
         // clac. period in seconds
-        period = (2*Math.PI) * Math.sqrt(Math.pow(distance, 3)/(bigM * BIG_G));
+        p = (2*Math.PI) * Math.sqrt(Math.pow(distance, 3)/(bigM * BIG_G));
         
-        return period;
+        return p;
     }
     
     public void setWidths(){
@@ -229,7 +245,7 @@ public class NewtonLawOfGravity extends Application {
         // TODO Clean up
         
         deltaTime = sliderDeltaTime.getValue();
-        System.out.println("Delta Time: " + deltaTime + " Period: " + period);
+        System.out.println("Delta Time mouseReleased: " + deltaTime + " Period mouseReleased: " + period);
         
         //TODO adj. Duration.millis(period * 1000 / deltaTime) based on how the slider value is recorded
         if(deltaTime == 0){
@@ -238,39 +254,72 @@ public class NewtonLawOfGravity extends Application {
         else{
             pathTransition.setDuration(Duration.millis((period * 1000) /  (period * deltaTime)));
         }
-        System.out.println("Duration in millisecond: " + (period * 1000) /  (period * deltaTime));
+        System.out.println("Duration after adjusted with slider: " + (period * 1000) /  (period * deltaTime));
         pathTransition.playFromStart();
     }
     
     public void actionPerformed(ActionEvent e){
 
+            /*----------FOR btnCalc/CALCULATING FORCE-------------*/
         if(e.getSource() == btnCalc){
             try{
                 
                 if(Double.parseDouble(m1Txt.getText()) <= 0 
-                    || Double.parseDouble(m2Txt.getText()) <= 0 ){
+                    || Double.parseDouble(m2Txt.getText()) <= 0){
                     throw new InvalidValueException();
-                }         
+                }  
+                
                 else {
                     mass1 = Double.parseDouble(m1Txt.getText());
                     mass2 = Double.parseDouble(m2Txt.getText());
                     distance = sliderR.getValue();
                     force = (BIG_G*mass1*mass2)/Math.pow(distance, 2);
                     //display answer
-                    lbAnswer.setText("" + force);
-                    
-                    // call the period function
-                    period = getPeriod();
-                    //TODO adj. Duration.millis(period * 1000 / deltaTime) based on how the slider value is recorded
-                    pathTransition.setDuration(Duration.millis(period * 1000 * deltaTime));
-                    pathTransition.playFromStart();
+                    lbAnswer.setText("" + force);                  
                 }
             }
             catch(InvalidValueException ex){
                 ex.toString();
-                lbError.setText("Invalid Value! Masses can't be zero or negative!");
+                lbError.setText("Values have to be integer or double, "
+                        + "and cannot be zero or negative ");
             }
         }
+        
+        else if(e.getSource() == btnPlay){
+            playbtnPerformed();
+        }
+        else if(e.getSource() == btnPause){
+            pathTransition.pause();
+        }
+    }
+    
+    public static void playbtnPerformed(){
+        if(m1Txt.getText().equals("") || m2Txt.getText().equals("")){
+            mass1 = DEFAULT_MASS_1;
+            mass2 = DEFAULT_MASS_2;
+            m1Txt.setText("" + DEFAULT_MASS_1);
+            m2Txt.setText("" + DEFAULT_MASS_2);
+            distance = sliderR.getValue();
+            force = (BIG_G*mass1*mass2)/Math.pow(distance, 2);
+                    //display answer
+            lbAnswer.setText("" + force);
+            
+            period = getPeriod();
+            System.out.println("Period: " + period);
+            System.out.println("Big mass: " + bigM);
+            System.out.println("Distance: " + distance);
+           
+        }
+        else{
+            mass1 = Double.parseDouble(m1Txt.getText());
+            mass2 = Double.parseDouble(m2Txt.getText());
+            
+            period = getPeriod();
+        }
+        //TODO adj. Duration.millis(period * 1000 / deltaTime) based on how the slider value is recorded
+        pathTransition.setDuration(Duration.millis(period * 1000 * deltaTime));
+        System.out.println("Duration after hit play button: " + period * 1000 * deltaTime);
+        pathTransition.playFromStart();
     }
     
     public static void main(String[] args) {
