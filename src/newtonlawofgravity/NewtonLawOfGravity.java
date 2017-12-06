@@ -29,10 +29,14 @@ import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.stage.Modality;
+import javafx.stage.Popup;
 import javafx.util.Duration;
+import javax.swing.event.DocumentEvent;
 
 
 public class NewtonLawOfGravity extends Application {
@@ -51,51 +55,79 @@ public class NewtonLawOfGravity extends Application {
     static Slider sliderR, sliderDeltaTime;
     static Button btnCalc, btnPlay, btnPause;
     static PathTransition pathTransition;
+    static Body b1, b2;
+    static Popup popup;
+    static GridPane graphicPane;
+    static Stage testStage;
+    static GridPane bodyValuesPane, bodyEditPane;
+    static FlowPane bodyButtonPane;
+    static Button saveChangesBtn;
     
     @Override
     public void start(Stage primaryStage){
         
         
+        
+        
       /*************************GRAPHIC SIMULATION PANE****************************/
       /****************************************************************************/
+      /*
         Circle circle = new Circle(0, 0, 100);
         
-        Circle circle2 = new Circle(0, 0, 10);
-        circle2.setFill(Color.BLUE);
+        //Circle circle2 = new Circle(0, 0, 10);
+        //circle2.setFill(Color.BLUE);
         
-        Circle circle3 = new Circle(0,0, 50);
-        circle3.setFill(Color.ORANGE);
+        b1 = new Body();
+        b1.setFill(Color.AQUA);
+        b2 = new Body();
+        b2.setFill(Color.GREEN);
+        
+        //Circle circle3 = new Circle(0,0, 50);
+        //circle3.setFill(Color.ORANGE);
         
         sliderDeltaTime = new Slider(minDeltaTime, maxDeltaTime, 1.0);
         sliderDeltaTime.setOnMouseReleased(e -> mouseReleased(e));
+        
+        b1.setOnMouseReleased(e -> mouseReleased(e));
+        b2.setOnMouseReleased(e -> mouseReleased(e));
         
         btnPlay = new Button("Play");
         btnPlay.setOnAction(e -> actionPerformed(e));  
         
         btnPause = new Button("Pause");
         btnPause.setOnAction(e -> actionPerformed(e)); 
-        
+      
+      */
+      
+        /*
         pathTransition = new PathTransition();
         pathTransition.setPath(circle);
         pathTransition.setInterpolator(Interpolator.LINEAR);
-        pathTransition.setNode(circle2);
+        pathTransition.setNode(b2);
         pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
         pathTransition.setCycleCount(Timeline.INDEFINITE);
+        */
         
-        GridPane graphicPane = new GridPane();
+        /*
+        graphicPane = new GridPane();
         StackPane testPane = new StackPane();
         graphicPane.add(testPane, 0, 0);
         graphicPane.add(sliderDeltaTime, 0, 1);
         graphicPane.add(btnPlay, 0, 2);
         graphicPane.add(btnPause, 0, 3);
-        testPane.getChildren().add(circle2);
-        testPane.getChildren().add(circle3);
+        testPane.getChildren().add(b1);
+        testPane.getChildren().add(b2);
         graphicPane.setMinWidth(300);
         graphicPane.setAlignment(Pos.CENTER);
         graphicPane.setId("graphicPane"); // for css
+        */
         
+        graphicPane = new GraphicPane();
+        
+        /*
       //++ TODO this needs to be calculated based on the radius and outer body so clipping does not occur
         sliderDeltaTime.setPadding(new Insets(240, 0, 0, 0));       
+        */
       /****************************************************************************/
       /****************************************************************************/
         
@@ -208,8 +240,29 @@ public class NewtonLawOfGravity extends Application {
         primaryStage.show();     
       /****************************************************************************/
       /****************************************************************************/
+    
+      // this is for the popup window
+      /*
+        bodyEditPane = new GridPane();
+        bodyValuesPane = new GridPane();
+        bodyButtonPane = new FlowPane();
+        bodyValuesPane.add(massLabel = new Label("Mass"), 0,0);
+        bodyValuesPane.add(massValue = new TextField(), 1, 0);
+        bodyButtonPane.getChildren().add(saveChangesBtn = new Button("Save Changes"));
+        
+        bodyEditPane.add(bodyValuesPane, 0, 0);
+        bodyEditPane.add(bodyButtonPane, 0, 1);
+        Scene scenePop = new Scene(bodyEditPane, 200, 200);
+      */
+      /*
+        testStage = new Stage();
+        testStage.setScene(scenePop);
+        testStage.initModality(Modality.APPLICATION_MODAL);
+      */
     }
  
+    static Label massLabel;
+    static TextField massValue;
     
   /*<< set width for all the controls in the calcPane >>*/
     public void setWidths(){
@@ -256,21 +309,43 @@ public class NewtonLawOfGravity extends Application {
     
     /*<< Controlling the time slider to speed up/slow down period >>*/
     public void mouseReleased(MouseEvent e){
-        //++ TODO Clean up      
-        deltaTime = sliderDeltaTime.getValue();
-        /*---System.out.println("Delta Time mouseReleased: " + deltaTime 
-            + " Period mouseReleased: " + period);---*/
-        
-      //++ TODO adj. Duration.millis(period * 1000 / deltaTime) 
-      //++based on how the slider value is recorded
-        if(deltaTime == 0){
-            pathTransition.setDuration(Duration.millis(period * 1000));
+        System.out.println(e.getSource());
+        if(e.getSource().equals(sliderDeltaTime)){
+            //++ TODO Clean up      
+            deltaTime = sliderDeltaTime.getValue();
+            /*---System.out.println("Delta Time mouseReleased: " + deltaTime 
+                + " Period mouseReleased: " + period);---*/
+
+          //++ TODO adj. Duration.millis(period * 1000 / deltaTime) 
+          //++based on how the slider value is recorded
+            if(deltaTime == 0){
+                pathTransition.setDuration(Duration.millis(period * 1000));
+            }
+            else{
+                pathTransition.setDuration(Duration.millis((period * 1000) /  (period * deltaTime)));
+            }
+            System.out.println("Duration after adjusted with slider: " + (period * 1000) /  (period * deltaTime));
+            pathTransition.playFromStart();
         }
-        else{
-            pathTransition.setDuration(Duration.millis((period * 1000) /  (period * deltaTime)));
+        else if(e.getSource().getClass().equals(Body.class)){
+            if(e.getSource().equals(b1)){
+                // popup window to adjust the values of body 1
+                System.out.println("Body1");
+                
+                testStage.setTitle("Body1 Values");
+                massValue.setText(Double.toString(b1.getMass()));
+                testStage.showAndWait();
+                
+            }
+            else if(e.getSource().equals(b2)){
+                // popup window to adjust the values of body 2
+                System.out.println("Body2");
+                
+                testStage.setTitle("Body2 Values");
+                massValue.setText(Double.toString(b2.getMass()));
+                testStage.showAndWait();
+            }
         }
-        System.out.println("Duration after adjusted with slider: " + (period * 1000) /  (period * deltaTime));
-        pathTransition.playFromStart();
     }
     
     
@@ -342,6 +417,8 @@ public class NewtonLawOfGravity extends Application {
     
     
     /*<< Throw an exception when the user tries to enter illegal values >>*/ 
+    
+    /*
     public class InvalidValueException extends IllegalArgumentException{
     
         private String msg;
@@ -365,6 +442,7 @@ public class NewtonLawOfGravity extends Application {
             return new String(getClass().getName() + ": " + msg);
         }
     }  
+    */
     
     
     public static void main(String[] args) {
@@ -380,7 +458,7 @@ public class NewtonLawOfGravity extends Application {
 */
 
 /* ############# KASIN'S TO-DOs ##############
-- Rewrite the period/duration calculating function if needed
-- Add pop-up windows for 2 planets
-- 
+- Rewrite the period/duration calculating function if needed..... needs work
+- Add pop-up windows for 2 planets............................... in progress
+- Add period/duration slider function............................ TODO
 */
