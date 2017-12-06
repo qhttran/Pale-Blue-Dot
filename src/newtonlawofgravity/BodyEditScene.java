@@ -11,17 +11,16 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
+import javafx.stage.WindowEvent;
 
 /**
  *
  * @author Kasin
  */
 public class BodyEditScene extends Scene{
-    private double mass;
-    private int radius;
+    Body body;
     private Color c;
     private Image image;
     private Label massLabel, radiusLabel, colorLabel, imageLabel;
@@ -29,8 +28,9 @@ public class BodyEditScene extends Scene{
     private Button saveBtn;
     private GridPane gp;
     
-    public BodyEditScene(double mass, int radius){
+    public BodyEditScene(Body b){
         super(new GridPane(), 400, 400);
+        this.body = b;
         massLabel = new Label("Mass (kg): ");
         radiusLabel = new Label("Radius (m): ");
         colorLabel = new Label("Color: ");
@@ -39,8 +39,8 @@ public class BodyEditScene extends Scene{
         saveBtn.setOnAction(e -> saveButtonPressed(e));
         gp = new GridPane();
         this.setRoot(gp);
-        massText = new TextField(Double.toString(mass));
-        radiusText = new TextField(Integer.toString(radius));
+        massText = new TextField(Double.toString(body.getMass()));
+        radiusText = new TextField(Double.toString(body.getRadius()));
         
         gp.add(massLabel, 0, 0);
         gp.add(massText, 1, 0);
@@ -54,25 +54,16 @@ public class BodyEditScene extends Scene{
         
     }
     
+    public void updateData(){
+        massText.setText(Double.toString(body.getMass()));
+        radiusText.setText(Double.toString(body.getRadius()));
+    }
+    
     private void saveButtonPressed(ActionEvent e){
         if(e.getSource().equals(saveBtn)){
-            mass = Double.parseDouble(massText.getText());
-            radius = Integer.parseInt(radiusText.getText());
+            body.setRadius(Double.parseDouble(radiusText.getText()));
+            body.setMass(Double.parseDouble(massText.getText()));
         }
-    }
-
-    /**
-     * @return the mass
-     */
-    public double getMass() {
-        return mass;
-    }
-
-    /**
-     * @return the radius
-     */
-    public int getRadius() {
-        return radius;
     }
 
     /**
