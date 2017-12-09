@@ -35,7 +35,7 @@ import javafx.util.Duration;
 
 public class NewtonLawOfGravity extends Application {
     
-    private static final double BIG_G = 6.674 * Math.pow(10, -11);
+    public static final double BIG_G = 6.674 * Math.pow(10, -11);
     public final double minDeltaTime = 0.0;
     public final double maxDeltaTime = 2.0;
     public static final double DEFAULT_MASS_1 = 1000;
@@ -132,8 +132,9 @@ public class NewtonLawOfGravity extends Application {
         primaryStage.show();
     }
  
+    /*
     
-  /*<< Calculate and return the appropriate period (orbiting speed) >>*/
+  << Calculate and return the appropriate period (orbiting speed) >>
     public static double getPeriod(){      
       // compare to find the larger mass
         if(mass1 > mass2){
@@ -147,9 +148,11 @@ public class NewtonLawOfGravity extends Application {
         double p = (2*Math.PI) * Math.sqrt(Math.pow(distance, 3)/(bigM * BIG_G));     
         return p;
     }
-    
+    */
+    //--
     
     /*<< Controlling the time slider to speed up/slow down period >>*/
+    /*
     public void mouseReleased(MouseEvent e){
         System.out.println(e.getSource());
         if(e.getSource().equals(sliderDeltaTime)){
@@ -160,6 +163,7 @@ public class NewtonLawOfGravity extends Application {
 
           //++ TODO adj. Duration.millis(period * 1000 / deltaTime) 
           //++based on how the slider value is recorded
+    /*
             if(deltaTime == 0){
                 pathTransition.setDuration(Duration.millis(period * 1000));
             }
@@ -169,7 +173,8 @@ public class NewtonLawOfGravity extends Application {
             System.out.println("Duration after adjusted with slider: " + (period * 1000) /  (period * deltaTime));
             pathTransition.playFromStart();
         }
-        else if(e.getSource().getClass().equals(Body.class)){
+        //-- this can be deleted
+       /* else if(e.getSource().getClass().equals(Body.class)){
             if(e.getSource().equals(b1)){
                 // popup window to adjust the values of body 1
                 System.out.println("Body1");
@@ -187,9 +192,10 @@ public class NewtonLawOfGravity extends Application {
                 massValue.setText(Double.toString(b2.getMass()));
                 testStage.showAndWait();
             }
-        }
+        }*/
+    /*
     }
-    
+    */
     
     /*<< So far: controlling buttons: Calculate, Play, and Pause >>
     public void actionPerformed(ActionEvent e){

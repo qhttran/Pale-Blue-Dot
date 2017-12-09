@@ -5,8 +5,8 @@
 package newtonlawofgravity;
 
 import javafx.scene.image.Image;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -32,13 +32,17 @@ public class Body extends Circle{
         this(50000, 30, "Default", Color.RED);
     }
     
-    public Body(double mass, int radius, String name, Color c){
+    public Body(Body b){
+        this(b.getMass(), (int) b.getRadius(), b.getName(), b.getFill());
+    }
+    
+    public Body(double mass, int radius, String name, Paint c){
         super(0, 0, radius, c);
         this.mass = mass;
         this.name = name;
         
         // adds a mouseListener to triger the popup window
-        this.setOnMouseReleased(e -> mouseReleased(e));
+       //-- this.setOnMouseReleased(e -> mouseReleased(e));
         
         // all four lines below are creating the popup window
         testStage = new Stage();
@@ -47,8 +51,8 @@ public class Body extends Circle{
         testStage.initModality(Modality.APPLICATION_MODAL);
     }
     
+    /*
     private void mouseReleased(MouseEvent e){
-        /*--- System.out.println(this.name); ---*/
         
         // this is what makes the popup window display on user's screen
         scenePop.updateData();
@@ -58,6 +62,12 @@ public class Body extends Circle{
         // get the values the user entered
         //this.mass = scenePop.getMass();
         //this.setRadius(scenePop.getRadius());
+    }
+*/
+    public void popUp(){
+        scenePop.updateData();
+        testStage.setOnCloseRequest(we -> windowClosed(we));
+        testStage.showAndWait();
     }
     
     private void windowClosed(WindowEvent e){
@@ -71,11 +81,26 @@ public class Body extends Circle{
         this.mass = mass;
     }
 
-    
     public String getName() {
         return name;
     }
     public void setName(String name) {
         this.name = name;
     }
+    
+     public Body compareTo(Body b){
+         // returns the smaller body
+        
+        if(this.getMass() > b.getMass()){
+            return b;
+        }
+        else{
+            return this;
+        }
+     }
+     
+     public void move(double x, double y){
+         this.setCenterX(x);
+         this.setCenterY(y);
+     }
 }
