@@ -112,10 +112,8 @@ public class GraphicPane extends BorderPane{
             System.out.println("Button Pause");
         }
         else if(e.getSource().equals(btnForce)){
-            System.out.println("Button Get Force Pressed");
-            force = (BIG_G*getB1().getMass()*getB2().getMass())
-                    /Math.pow(sliderDistance.getValue(), 2);
-            forceAnswer.setText("" + force);
+            System.out.println("Button Get Force Pressed");          
+            forceAnswer.setText("" + getForce());
             System.out.println("Mass 1:" + getB1().getMass());
             System.out.println("Mass 2:" + getB2().getMass());
             System.out.println("Distance:" + sliderDistance.getValue());
@@ -131,14 +129,12 @@ public class GraphicPane extends BorderPane{
         this.sliderDeltaTime = sliderDeltaTime;
     }
 
-
     public Button getBtnPlay() {
         return btnPlay;
     }
     public void setBtnPlay(Button btnPlay) {
         this.btnPlay = btnPlay;
     }
-
 
     public Button getBtnPause() {
         return btnPause;
@@ -147,12 +143,27 @@ public class GraphicPane extends BorderPane{
         this.btnPause = btnPause;
     }
     
+    public Slider getSliderDistance() {
+        return sliderDistance;
+    }
+    public void setSliderDistance(Slider sliderDistance) {
+        this.sliderDistance = sliderDistance;
+    }
 
     public Button getBtnForce() {
         return btnForce;
     }
     public void setBtnForce(Button btnForce) {
         this.btnForce = btnForce;
+    }
+    
+    public double getForce() {
+        force = (BIG_G*getB1().getMass()*getB2().getMass())
+                    /Math.pow(sliderDistance.getValue(), 2);
+        return force;
+    }
+    public void setForce(double force) {
+        this.force = force;
     }
 
 
