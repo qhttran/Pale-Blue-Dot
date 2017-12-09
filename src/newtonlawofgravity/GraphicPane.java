@@ -2,12 +2,13 @@
  * This is the pane that contains the animation with the bodies, play/pause buttons,
  * and the deltaTimeSlider.
 
-I AM WORKING ON THE BOTTOM TOOL BAR LAYOUT
+NOTE: FOR SOME REASONS THE MASS UPDATED BUT THE DISTANCE DOESN'T
  */
 package newtonlawofgravity;
 
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -24,16 +25,17 @@ import javafx.scene.paint.Color;
  */
 public class GraphicPane extends BorderPane{
     //++ add the slider function
-    public HBox bottomToolbar;
-    public Group graphicController;
-    private Slider sliderDeltaTime;
-    private Button btnPlay, btnPause;
+    private static final double BIG_G = 6.674 * Math.pow(10, -11);
+    private double force;
+    
+    public HBox bottomToolbar, HboxController, forceHbox;
+    private Slider sliderDeltaTime, sliderDistance;
+    private Button btnPlay, btnPause, btnForce;
     
     private Body b1, b2;
     private OrbitPath op;
     
-    public Label timeSliderLabel, forceLabel;
-    public Group forceGroup;
+    public Label timeSliderLabel, distanceSliderLabel;
     private Label forceAnswer;
     
     public GraphicPane(){
@@ -46,34 +48,6 @@ public class GraphicPane extends BorderPane{
         testPane.setId("testPane");
         this.setCenter(testPane);
         
-        btnPlay = new Button("PLAY");
-        btnPlay.setOnAction(e -> actionPerformed(e));
-        btnPause = new Button("PAUSE");
-        btnPause.setOnAction(e -> actionPerformed(e));
-        timeSliderLabel = new Label("TIME SLIDER: ");
-        sliderDeltaTime = new Slider();
-        sliderDeltaTime.setOnMouseReleased(e -> mouseReleased(e));
-        graphicController = new Group();
-        HBox controller = new HBox();
-        controller.getChildren().addAll(btnPlay, btnPause, 
-                                            timeSliderLabel, sliderDeltaTime);
-        graphicController.getChildren().add(controller);
-        
-        forceLabel = new Label("RESULTANT FORCE: ");
-        forceAnswer = new Label("");
-        forceAnswer.setStyle("-fx-border-color: gray");
-        forceAnswer.setPrefWidth(150);
-        forceGroup = new Group();
-        forceGroup.getChildren().addAll(forceLabel, forceAnswer);
-        
-        
-        bottomToolbar = new HBox();
-        bottomToolbar.setId("bottomToolbar");
-        bottomToolbar.setSpacing(10);
-        bottomToolbar.setPadding(new Insets(10, 12, 10, 12));
-        bottomToolbar.getChildren().addAll(graphicController, forceGroup);
-        this.setBottom(bottomToolbar);
-        
         this.b1 = b1;
         this.b2 = b2;
         op = new OrbitPath(b2, b1);
@@ -85,6 +59,41 @@ public class GraphicPane extends BorderPane{
         this.setMinWidth(300);
         //this.setAlignment(Pos.CENTER);
         this.setId("graphicPane"); // for css
+        
+        btnPlay = new Button("PLAY");
+        btnPlay.setOnAction(e -> actionPerformed(e));
+        btnPause = new Button("PAUSE");
+        btnPause.setOnAction(e -> actionPerformed(e));
+        
+        timeSliderLabel = new Label("SPEED SLIDER");
+        sliderDeltaTime = new Slider();
+        sliderDeltaTime.setOnMouseReleased(e -> mouseReleased(e));
+        
+        distanceSliderLabel = new Label("DISTANCE(m)");
+        sliderDistance = new Slider(b1.getRadius() + b2.getRadius(), 1200, b1.getRadius() + b2.getRadius());
+        sliderDistance.setOnMouseReleased(e -> mouseReleased(e));
+        HboxController = new HBox();
+        HboxController.getChildren().addAll(btnPlay, btnPause, 
+                                            timeSliderLabel, sliderDeltaTime,
+                                            distanceSliderLabel, sliderDistance);
+        HboxController.setSpacing(10);
+        
+        btnForce = new Button("FORCE(N)= ");
+        btnForce.setOnAction(e -> actionPerformed(e));
+        forceAnswer = new Label("");
+        forceAnswer.setStyle("-fx-border-color: gray");
+        forceAnswer.setPrefWidth(150);
+        forceHbox = new HBox();
+        forceHbox.getChildren().addAll(btnForce, forceAnswer);
+        forceHbox.setSpacing(5);
+             
+        bottomToolbar = new HBox();
+        bottomToolbar.setAlignment(Pos.CENTER);
+        bottomToolbar.setId("bottomToolbar");
+        bottomToolbar.setSpacing(30);
+        bottomToolbar.setPadding(new Insets(10, 12, 10, 12));
+        bottomToolbar.getChildren().addAll(HboxController, forceHbox);
+        this.setBottom(bottomToolbar);
     }
     
     public void mouseReleased(MouseEvent e){
@@ -102,88 +111,70 @@ public class GraphicPane extends BorderPane{
             getOp().getPath().pause();
             System.out.println("Button Pause");
         }
+        else if(e.getSource().equals(btnForce)){
+            System.out.println("Button Get Force Pressed");
+            force = (BIG_G*getB1().getMass()*getB2().getMass())
+                    /Math.pow(sliderDistance.getValue(), 2);
+            forceAnswer.setText("" + force);
+            System.out.println("Mass 1:" + getB1().getMass());
+            System.out.println("Mass 2:" + getB2().getMass());
+            System.out.println("Distance:" + sliderDistance.getValue());
+            System.out.println("Force Calculated: " + force);
+        }
     }
 
-    /**
-     * @return the sliderDeltaTime
-     */
+
     public Slider getSliderDeltaTime() {
         return sliderDeltaTime;
     }
-
-    /**
-     * @param sliderDeltaTime the sliderDeltaTime to set
-     */
     public void setSliderDeltaTime(Slider sliderDeltaTime) {
         this.sliderDeltaTime = sliderDeltaTime;
     }
 
-    /**
-     * @return the btnPlay
-     */
+
     public Button getBtnPlay() {
         return btnPlay;
     }
-
-    /**
-     * @param btnPlay the btnPlay to set
-     */
     public void setBtnPlay(Button btnPlay) {
         this.btnPlay = btnPlay;
     }
 
-    /**
-     * @return the btnPause
-     */
+
     public Button getBtnPause() {
         return btnPause;
     }
-
-    /**
-     * @param btnPause the btnPause to set
-     */
     public void setBtnPause(Button btnPause) {
         this.btnPause = btnPause;
     }
+    
 
-    /**
-     * @return the b1
-     */
+    public Button getBtnForce() {
+        return btnForce;
+    }
+    public void setBtnForce(Button btnForce) {
+        this.btnForce = btnForce;
+    }
+
+
     public Body getB1() {
         return b1;
     }
-
-    /**
-     * @param b1 the b1 to set
-     */
     public void setB1(Body b1) {
         this.b1 = b1;
     }
+    
 
-    /**
-     * @return the b2
-     */
     public Body getB2() {
         return b2;
     }
-
-    /**
-     * @param b2 the b2 to set
-     */
     public void setB2(Body b2) {
         this.b2 = b2;
     }
 
-    /**
-     * @return the orbit path
-     */
+    
     public OrbitPath getOp() {
         return op;
     }
-
-    /**
-     * @param op the orbit path to set
-     */
     public void setOp(OrbitPath op) {
         this.op = op;
     }
