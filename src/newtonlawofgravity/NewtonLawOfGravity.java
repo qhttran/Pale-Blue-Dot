@@ -14,29 +14,25 @@
 package newtonlawofgravity;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 
-import javafx.animation.Interpolator;
 import javafx.animation.PathTransition;
-import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
-import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.stage.Modality;
+import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Popup;
 import javafx.util.Duration;
-import javax.swing.event.DocumentEvent;
 
 
 public class NewtonLawOfGravity extends Application {
@@ -53,85 +49,25 @@ public class NewtonLawOfGravity extends Application {
     static Label lbForce, lbBigG, lbM1, lbM2, lbR, lbAnswer, 
             m1Unit, m2Unit, fUnit, rUnit, lbError;
     static Slider sliderR, sliderDeltaTime;
-    static Button btnCalc, btnPlay, btnPause;
+    //static Button btnCalc, btnPlay, btnPause;
     static PathTransition pathTransition;
     static Body b1, b2;
     static Popup popup;
-    static GridPane graphicPane;
+    static BorderPane graphicPane;
     static Stage testStage;
     static GridPane bodyValuesPane, bodyEditPane;
     static FlowPane bodyButtonPane;
     static Button saveChangesBtn;
     
+    static Label massLabel;
+    static TextField massValue;
+    
     @Override
     public void start(Stage primaryStage){
         
         
-        
-        
-      /*************************GRAPHIC SIMULATION PANE****************************/
-      /****************************************************************************/
-      /*
-        Circle circle = new Circle(0, 0, 100);
-        
-        //Circle circle2 = new Circle(0, 0, 10);
-        //circle2.setFill(Color.BLUE);
-        
-        b1 = new Body();
-        b1.setFill(Color.AQUA);
-        b2 = new Body();
-        b2.setFill(Color.GREEN);
-        
-        //Circle circle3 = new Circle(0,0, 50);
-        //circle3.setFill(Color.ORANGE);
-        
-        sliderDeltaTime = new Slider(minDeltaTime, maxDeltaTime, 1.0);
-        sliderDeltaTime.setOnMouseReleased(e -> mouseReleased(e));
-        
-        b1.setOnMouseReleased(e -> mouseReleased(e));
-        b2.setOnMouseReleased(e -> mouseReleased(e));
-        
-        btnPlay = new Button("Play");
-        btnPlay.setOnAction(e -> actionPerformed(e));  
-        
-        btnPause = new Button("Pause");
-        btnPause.setOnAction(e -> actionPerformed(e)); 
-      
-      */
-      
-        /*
-        pathTransition = new PathTransition();
-        pathTransition.setPath(circle);
-        pathTransition.setInterpolator(Interpolator.LINEAR);
-        pathTransition.setNode(b2);
-        pathTransition.setOrientation(PathTransition.OrientationType.ORTHOGONAL_TO_TANGENT);
-        pathTransition.setCycleCount(Timeline.INDEFINITE);
-        */
-        
-        /*
-        graphicPane = new GridPane();
-        StackPane testPane = new StackPane();
-        graphicPane.add(testPane, 0, 0);
-        graphicPane.add(sliderDeltaTime, 0, 1);
-        graphicPane.add(btnPlay, 0, 2);
-        graphicPane.add(btnPause, 0, 3);
-        testPane.getChildren().add(b1);
-        testPane.getChildren().add(b2);
-        graphicPane.setMinWidth(300);
-        graphicPane.setAlignment(Pos.CENTER);
-        graphicPane.setId("graphicPane"); // for css
-        */
-        
         graphicPane = new GraphicPane();
-        
-        /*
-      //++ TODO this needs to be calculated based on the radius and outer body so clipping does not occur
-        sliderDeltaTime.setPadding(new Insets(240, 0, 0, 0));       
-        */
-      /****************************************************************************/
-      /****************************************************************************/
-        
-  
+        graphicPane.setPrefWidth(700);
         
         
       /***************************FORCE CALCULATOR PANE****************************/
@@ -158,8 +94,8 @@ public class NewtonLawOfGravity extends Application {
         fUnit = new Label("N"); 
           // other
         lbError = new Label("");
-        btnCalc = new Button("Calculate");
-        btnCalc.setOnAction(e -> actionPerformed(e));
+        //btnCalc = new Button("Calculate");
+        //btnCalc.setOnAction(e -> actionPerformed(e));
         
         /**********CENTER TEXT IN LABEL**********/
         lbForce.setAlignment(Pos.CENTER_LEFT);
@@ -192,104 +128,41 @@ public class NewtonLawOfGravity extends Application {
         sliderR.setShowTickLabels(true);
         sliderR.setValueChanging(true);
         sliderR.setMajorTickUnit(10);
+        
+        /********************************BOTTOM HBOX****************************/
              
+        /******************************** TEXT PANE/ABOUT ****************************/ 
+        TextFlow textPane = new TextFlow();
+        textPane.setId("textPane");
+        textPane.setPrefWidth(200);
         
-        GridPane calcPane = new GridPane();
-        calcPane.setId("calcPane"); // for css
-      //put container in middle of scene
-        calcPane.setAlignment(Pos.CENTER);
-      //set spacing between controls in grid
-        calcPane.setHgap(10);
-        calcPane.setVgap(35);
-      //add to grid, cell by cell
-        calcPane.add(lbBigG,0,0,4,1); //1st col, 1st row, spans 4 cols
-        calcPane.add(lbM1,0,1); // 1st col, 2nd row
-        calcPane.add(m1Txt,1,1,2,1); // 2nd col, 2nd row, spans 2 cols
-        calcPane.add(m1Unit,3,1);// 3rd col, 2nd row
-        calcPane.add(lbM2,0,2); // 1st col, 3rd row
-        calcPane.add(m2Txt,1,2,2,1); // 2nd col, 3rd row, spans 2 cols
-        calcPane.add(m2Unit,3,2);// 3rd col, 3rd row
-        calcPane.add(lbR,0,3); // 1st col, 4th row
-        calcPane.add(sliderR,1,3,2,1); // 2nd col, 4th row, spans 2 cols
-        calcPane.add(rUnit,3,3); // 3rd col, 4th row
-        calcPane.add(lbForce,0,4); // 1st col, 5th row
-        calcPane.add(lbAnswer,1,4,2,1); // 2nd col, 5th row, spans 2 cols
-        calcPane.add(fUnit,3,4); // 3rd col, 5th row
-        calcPane.add(btnCalc,2,5); // 6th row
-        calcPane.add(lbError,0,6,4,1); //1st col, 7th row, spans 4 cols
-        
-      //set widths of all controls in separate method
-        setWidths();      
-      /****************************************************************************/
-      /****************************************************************************/
-        
-        
+        Text aboutTitle = new Text();
+        aboutTitle.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"
+                + " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
+                + " reprehenderit in voluptate velit esse cillum dolore eu fugiat "
+                + "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
+                + "sunt in culpa qui officia deserunt mollit anim id est laborum.");
+        textPane.getChildren().add(aboutTitle);
+      
       /********************************BIG GENERAL PANE****************************/ 
-      /****************************************************************************/       
-        GridPane bigPane = new GridPane();
-        bigPane.setAlignment(Pos.CENTER);
-        bigPane.add(graphicPane,0,0);
-        bigPane.add(calcPane,1,0);
-        bigPane.setHgap(10);
-        Scene scene = new Scene(bigPane, 1000, 750);
-        bigPane.setMinSize(1000, 750);
+        BorderPane bigPane = new BorderPane();
+        bigPane.setPrefSize(900, 650);
+        bigPane.setMinSize(900, 650);
+        bigPane.setMinSize(900, 650);
+        bigPane.setCenter(graphicPane);
+        bigPane.setRight(textPane);
+        //bigPane.setBottom(bottomBar);
+
+        Scene scene = new Scene(bigPane, 900, 650);
         scene.getStylesheets().add
                      (NewtonLawOfGravity.class.getResource("newtonsLaw.css").toExternalForm());
-        
+        primaryStage.setTitle("Pale Blue Dot");
         primaryStage.setScene(scene);
-        primaryStage.show();     
-      /****************************************************************************/
-      /****************************************************************************/
-    
-      // this is for the popup window
-      /*
-        bodyEditPane = new GridPane();
-        bodyValuesPane = new GridPane();
-        bodyButtonPane = new FlowPane();
-        bodyValuesPane.add(massLabel = new Label("Mass"), 0,0);
-        bodyValuesPane.add(massValue = new TextField(), 1, 0);
-        bodyButtonPane.getChildren().add(saveChangesBtn = new Button("Save Changes"));
-        
-        bodyEditPane.add(bodyValuesPane, 0, 0);
-        bodyEditPane.add(bodyButtonPane, 0, 1);
-        Scene scenePop = new Scene(bodyEditPane, 200, 200);
-      */
-      /*
-        testStage = new Stage();
-        testStage.setScene(scenePop);
-        testStage.initModality(Modality.APPLICATION_MODAL);
-      */
+        primaryStage.show();
     }
  
-    static Label massLabel;
-    static TextField massValue;
-    
-  /*<< set width for all the controls in the calcPane >>*/
-    public void setWidths(){
-          // row 1
-        lbBigG.setPrefWidth(430); 
-          // row 2
-        lbM1.setPrefWidth(100); 
-        m1Txt.setPrefWidth(210);
-        m1Unit.setPrefWidth(100);
-          // row 3
-        lbM2.setPrefWidth(100); 
-        m2Txt.setPrefWidth(210);
-        m2Unit.setPrefWidth(100);
-          // row 4
-        lbR.setPrefWidth(100); 
-        sliderR.setPrefWidth(210);
-        rUnit.setPrefWidth(100);
-          // row 5
-        lbForce.setPrefWidth(100);
-        lbAnswer.setPrefWidth(210);
-        fUnit.setPrefWidth(100);
-          // row 6
-        btnCalc.setPrefWidth(150);
-          // row 7
-        lbError.setPrefWidth(430);
-    }
-    
     
   /*<< Calculate and return the appropriate period (orbiting speed) >>*/
     public static double getPeriod(){      
@@ -349,9 +222,9 @@ public class NewtonLawOfGravity extends Application {
     }
     
     
-    /*<< So far: controlling buttons: Calculate, Play, and Pause >>*/
+    /*<< So far: controlling buttons: Calculate, Play, and Pause >>
     public void actionPerformed(ActionEvent e){
-      /******************FOR btnCalc/CALCULATING FORCE******************/
+      /******************FOR btnCalc/CALCULATING FORCE******************
         if(e.getSource() == btnCalc){
             try{
                 
@@ -374,7 +247,7 @@ public class NewtonLawOfGravity extends Application {
                         + "and cannot be zero or negative ");
             }
         }
-      /*****************************************************************/
+      /*****************************************************************
         
         else if(e.getSource() == btnPlay){
             playbtnPerformed();
@@ -382,10 +255,10 @@ public class NewtonLawOfGravity extends Application {
         else if(e.getSource() == btnPause){
             pathTransition.pause();
         }
-    }
+    }*/
     
     
-    /*<< Exclusively used to control Play button >>*/
+    /*<< Exclusively used to control Play button >>
     public static void playbtnPerformed(){
         if(m1Txt.getText().equals("") || m2Txt.getText().equals("")){
             mass1 = DEFAULT_MASS_1;
@@ -399,7 +272,7 @@ public class NewtonLawOfGravity extends Application {
             period = getPeriod();
             /*---System.out.println("Period: " + period);
             System.out.println("Big mass: " + bigM);
-            System.out.println("Distance: " + distance);---*/
+            System.out.println("Distance: " + distance);---
            
         }
         else{
@@ -413,38 +286,9 @@ public class NewtonLawOfGravity extends Application {
         pathTransition.setDuration(Duration.millis((period * 1000) /  (period * deltaTime)));
         System.out.println("Duration after hit play button: " + (period * 1000) /  (period * deltaTime));
         pathTransition.play();
-    }
+    }*/
     
-    
-    /*<< Throw an exception when the user tries to enter illegal values >>*/ 
-    
-    /*
-    public class InvalidValueException extends IllegalArgumentException{
-    
-        private String msg;
-        private static final String DEFAULT_EXCEPTION_MSG = "INVALID VALUE!";
-
-        public InvalidValueException(){
-            super();
-            msg = new String(DEFAULT_EXCEPTION_MSG );
-        }
-        public InvalidValueException(String msg){
-                    super(msg);
-                    this.msg = new String(msg);
-            }
-
-        @Override
-        public String getMessage(){
-            return new String(msg);
-        }
-        @Override
-        public String toString(){
-            return new String(getClass().getName() + ": " + msg);
-        }
-    }  
-    */
-    
-    
+ 
     public static void main(String[] args) {
         launch(args);
     }
