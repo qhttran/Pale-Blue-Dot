@@ -1,28 +1,40 @@
 /*
  * This is the pane that contains the animation with the bodies, play/pause buttons,
  * and the deltaTimeSlider.
+
+I AM WORKING ON THE BOTTOM TOOL BAR LAYOUT
  */
 package newtonlawofgravity;
 
 import javafx.event.ActionEvent;
-import javafx.geometry.Pos;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.control.Slider;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.paint.Color;
 
 /**
  *
  * @author Kasin
  */
-public class GraphicPane extends GridPane{
+public class GraphicPane extends BorderPane{
     //++ add the slider function
+    public HBox bottomToolbar;
+    public Group graphicController;
     private Slider sliderDeltaTime;
     private Button btnPlay, btnPause;
+    
     private Body b1, b2;
     private OrbitPath op;
+    
+    public Label timeSliderLabel, forceLabel;
+    public Group forceGroup;
+    private Label forceAnswer;
     
     public GraphicPane(){
         this(new Body(12225, 20, "Body1", Color.GREY), new Body(1455874, 40, "Body2", Color.ORANGE));
@@ -31,16 +43,37 @@ public class GraphicPane extends GridPane{
     public GraphicPane(Body b1, Body b2){
         super();
         StackPane testPane = new StackPane();
-        this.add(testPane, 0, 0);
+        testPane.setId("testPane");
+        this.setCenter(testPane);
+        
+        btnPlay = new Button("PLAY");
+        btnPlay.setOnAction(e -> actionPerformed(e));
+        btnPause = new Button("PAUSE");
+        btnPause.setOnAction(e -> actionPerformed(e));
+        timeSliderLabel = new Label("TIME SLIDER: ");
         sliderDeltaTime = new Slider();
         sliderDeltaTime.setOnMouseReleased(e -> mouseReleased(e));
-        btnPlay = new Button("Play");
-        btnPlay.setOnAction(e -> actionPerformed(e));
-        btnPause = new Button("Pause");
-        btnPause.setOnAction(e -> actionPerformed(e));
-        this.add(sliderDeltaTime, 0, 1);
-        this.add(btnPlay, 0, 2);
-        this.add(btnPause, 0, 3);
+        graphicController = new Group();
+        HBox controller = new HBox();
+        controller.getChildren().addAll(btnPlay, btnPause, 
+                                            timeSliderLabel, sliderDeltaTime);
+        graphicController.getChildren().add(controller);
+        
+        forceLabel = new Label("RESULTANT FORCE: ");
+        forceAnswer = new Label("");
+        forceAnswer.setStyle("-fx-border-color: gray");
+        forceAnswer.setPrefWidth(150);
+        forceGroup = new Group();
+        forceGroup.getChildren().addAll(forceLabel, forceAnswer);
+        
+        
+        bottomToolbar = new HBox();
+        bottomToolbar.setId("bottomToolbar");
+        bottomToolbar.setSpacing(10);
+        bottomToolbar.setPadding(new Insets(10, 12, 10, 12));
+        bottomToolbar.getChildren().addAll(graphicController, forceGroup);
+        this.setBottom(bottomToolbar);
+        
         this.b1 = b1;
         this.b2 = b2;
         op = new OrbitPath(b2, b1);
@@ -50,7 +83,7 @@ public class GraphicPane extends GridPane{
         testPane.getChildren().add(b1);
         testPane.getChildren().add(b2);
         this.setMinWidth(300);
-        this.setAlignment(Pos.CENTER);
+        //this.setAlignment(Pos.CENTER);
         this.setId("graphicPane"); // for css
     }
     
