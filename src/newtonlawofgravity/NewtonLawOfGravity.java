@@ -148,14 +148,14 @@ public class NewtonLawOfGravity extends Application {
       
       /********************************BIG GENERAL PANE****************************/ 
         BorderPane bigPane = new BorderPane();
-        bigPane.setPrefSize(900, 650);
-        bigPane.setMinSize(900, 650);
-        bigPane.setMinSize(900, 650);
+        bigPane.setPrefSize(1200, 650);
+        bigPane.setMinSize(1200, 650);
+        bigPane.setMinSize(1200, 650);
         bigPane.setCenter(graphicPane);
         bigPane.setRight(textPane);
         //bigPane.setBottom(bottomBar);
 
-        Scene scene = new Scene(bigPane, 900, 650);
+        Scene scene = new Scene(bigPane, 1200, 650);
         scene.getStylesheets().add
                      (NewtonLawOfGravity.class.getResource("newtonsLaw.css").toExternalForm());
         primaryStage.setTitle("Pale Blue Dot");
