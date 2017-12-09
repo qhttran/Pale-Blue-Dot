@@ -64,30 +64,17 @@ public class Body extends Circle{
         System.out.println("Window Closed");
     }
 
-    /**
-     * @return the mass
-     */
     public double getMass() {
         return mass;
     }
-
-    /**
-     * @param mass the mass to set
-     */
     public void setMass(double mass) {
         this.mass = mass;
     }
 
-    /**
-     * @return the name
-     */
+    
     public String getName() {
         return name;
     }
-
-    /**
-     * @param name the name to set
-     */
     public void setName(String name) {
         this.name = name;
     }

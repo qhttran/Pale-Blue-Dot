@@ -66,16 +66,10 @@ public class BodyEditScene extends Scene{
         }
     }
 
-    /**
-     * @return the c
-     */
     public Color getC() {
         return c;
     }
 
-    /**
-     * @return the image
-     */
     public Image getImage() {
         return image;
     }
