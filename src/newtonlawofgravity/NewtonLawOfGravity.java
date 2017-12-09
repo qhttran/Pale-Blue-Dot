@@ -17,18 +17,16 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 import javafx.animation.PathTransition;
-import javafx.event.ActionEvent;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Popup;
@@ -65,73 +63,11 @@ public class NewtonLawOfGravity extends Application {
     @Override
     public void start(Stage primaryStage){
         
-        
         graphicPane = new GraphicPane();
         graphicPane.setPrefWidth(700);
-        
-        
-      /***************************FORCE CALCULATOR PANE****************************/
-      /****************************************************************************/
-        /**********CREATE COMPONENTS**********/
-          // Big G
-        lbBigG = new Label("Universal Gravitational Constant (G) "
-                + "= 6.6740 x 10^-11 m^3 kg^-1 s^-2");
-          // 1st mass
-        lbM1 = new Label("Mass 1 = ");
-        m1Txt = new TextField();
-        m1Unit = new Label("kg");
-          // 2nd mass
-        lbM2 = new Label("Mass 2 = ");
-        m2Txt = new TextField();
-        m2Unit = new Label("kg");
-          // distance r
-        lbR = new Label("Distance (r) = ");
-        sliderR = new Slider(10, 100, 55);
-        rUnit = new Label("m");
-          // gravitational force
-        lbForce = new Label("Force G = ");
-        lbAnswer = new Label("?");
-        fUnit = new Label("N"); 
-          // other
-        lbError = new Label("");
-        //btnCalc = new Button("Calculate");
-        //btnCalc.setOnAction(e -> actionPerformed(e));
-        
-        /**********CENTER TEXT IN LABEL**********/
-        lbForce.setAlignment(Pos.CENTER_LEFT);
-        lbAnswer.setAlignment(Pos.CENTER);
-        lbBigG.setAlignment(Pos.CENTER);
-        lbM1.setAlignment(Pos.CENTER_LEFT);
-        lbM2.setAlignment(Pos.CENTER_LEFT);
-        lbR.setAlignment(Pos.CENTER_LEFT);
-        m1Unit.setAlignment(Pos.CENTER);
-        m2Unit.setAlignment(Pos.CENTER);
-        rUnit.setAlignment(Pos.CENTER);
-        fUnit.setAlignment(Pos.CENTER);
-        lbError.setAlignment(Pos.CENTER);
-        
-        /**********APPLY SIMPLE BORDER BY CSS**********/
-        lbForce.setStyle("-fx-border-color: #C0C0C0; -fx-padding: 10px;");
-        lbAnswer.setStyle("-fx-border-color: #C0C0C0; -fx-padding: 10px;");
-        lbBigG.setStyle("-fx-border-color: #C0C0C0; -fx-padding: 10px;");
-        lbM1.setStyle("-fx-border-color: #C0C0C0; -fx-padding: 10px;");
-        lbM2.setStyle("-fx-border-color: #C0C0C0; -fx-padding: 10px;");
-        lbR.setStyle("-fx-border-color: #C0C0C0; -fx-padding: 10px;");
-        m1Unit.setStyle("-fx-padding: 10px;");
-        m2Unit.setStyle("-fx-padding: 10px;");
-        rUnit.setStyle("-fx-padding: 10px;");
-        fUnit.setStyle("-fx-padding: 10px;");
-        lbError.setStyle("-fx-color: red");
-        
-        /**********STYLING FOR DISTANCE SLIDER**********/
-        sliderR.setShowTickMarks(true);
-        sliderR.setShowTickLabels(true);
-        sliderR.setValueChanging(true);
-        sliderR.setMajorTickUnit(10);
-        
-        /********************************BOTTOM HBOX****************************/
              
-        /******************************** TEXT PANE/ABOUT ****************************/ 
+        /******************************** TEXT PANE/ABOUT ****************************/
+        ScrollPane scrollText = new ScrollPane();
         TextFlow textPane = new TextFlow();
         textPane.setId("textPane");
         textPane.setPrefWidth(200);
@@ -143,8 +79,41 @@ public class NewtonLawOfGravity extends Application {
                 + " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
                 + " reprehenderit in voluptate velit esse cillum dolore eu fugiat "
                 + "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
-                + "sunt in culpa qui officia deserunt mollit anim id est laborum.");
+                + "sunt in culpa qui officia deserunt mollit anim id est laborum.\n"
+                + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                
+                + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"
+                + " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
+                + " reprehenderit in voluptate velit esse cillum dolore eu fugiat "
+                + "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
+                + "sunt in culpa qui officia deserunt mollit anim id est laborum.\n"
+               
+                + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"
+                + " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
+                + " reprehenderit in voluptate velit esse cillum dolore eu fugiat "
+                + "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
+                + "sunt in culpa qui officia deserunt mollit anim id est laborum.\n"
+                
+                + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"
+                + " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
+                + " reprehenderit in voluptate velit esse cillum dolore eu fugiat "
+                + "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
+                + "sunt in culpa qui officia deserunt mollit anim id est laborum.\n"
+                
+                + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+                + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+                + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"
+                + " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
+                + " reprehenderit in voluptate velit esse cillum dolore eu fugiat "
+                + "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
+                + "sunt in culpa qui officia deserunt mollit anim id est laborum.\n");
         textPane.getChildren().add(aboutTitle);
+        scrollText.setContent(textPane);
       
       /********************************BIG GENERAL PANE****************************/ 
         BorderPane bigPane = new BorderPane();
@@ -152,7 +121,7 @@ public class NewtonLawOfGravity extends Application {
         bigPane.setMinSize(1200, 650);
         bigPane.setMinSize(1200, 650);
         bigPane.setCenter(graphicPane);
-        bigPane.setRight(textPane);
+        bigPane.setRight(scrollText);
         //bigPane.setBottom(bottomBar);
 
         Scene scene = new Scene(bigPane, 1200, 650);
