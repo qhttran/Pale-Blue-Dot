@@ -40,7 +40,7 @@ public class GraphicPane extends BorderPane{
     private StackPane testPane;
     
     public GraphicPane(){
-        this(new Body(12225, 20, "Body1", Color.GREY), new Body(1455874, 40, "Body2", Color.ORANGE));
+        this(new Body(12225, 20, "Body1", Color.LIGHTBLUE), new Body(1455874, 40, "Body2", Color.ORANGE));
     }
     
     public GraphicPane(Body b1, Body b2){
@@ -51,7 +51,12 @@ public class GraphicPane extends BorderPane{
         
         this.b1 = b1;
         this.b2 = b2;
-        op = new OrbitPath(b2, b1);
+        if(b1.compareTo(b2).equals(b1)){
+            op = new OrbitPath(b1, b2);
+        }
+        else{
+            op = new OrbitPath(b2, b1);
+        }
         op.setRadius(100);
         //b1.setOnMouseReleased(e -> mouseReleased(e));
         //b2.setOnMouseReleased(e -> mouseReleased(e));
@@ -99,6 +104,11 @@ public class GraphicPane extends BorderPane{
         this.setBottom(bottomToolbar);
         b1.setOnMouseReleased(e -> mouseReleased(e));
         b2.setOnMouseReleased(e -> mouseReleased(e));
+        
+        // used to start up the motion
+        op.setRadius((int) sliderDistance.getValue());
+        op.calcPeriod(b1, b2, sliderDistance.getValue());
+        op.calcDeltaTime(sliderDeltaTime.getValue());
     }
     
     public void mouseReleased(MouseEvent e){
