@@ -46,6 +46,7 @@ public class Body extends Circle{
         
         // all four lines below are creating the popup window
         testStage = new Stage();
+        testStage.setTitle("Edit Your Planet");
         scenePop = new BodyEditScene(this);
         testStage.setScene(scenePop);
         testStage.initModality(Modality.APPLICATION_MODAL);

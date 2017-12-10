@@ -68,16 +68,18 @@ public class GraphicPane extends BorderPane{
         
         timeSliderLabel = new Label("SPEED SLIDER");
         sliderDeltaTime = new Slider(0.0, 2.0, 0.1);
+        sliderDeltaTime.setShowTickLabels(true);
         sliderDeltaTime.setOnMouseReleased(e -> mouseReleased(e));
         
         distanceSliderLabel = new Label("DISTANCE(m)");
         sliderDistance = new Slider(b1.getRadius() + b2.getRadius(), 1200, b1.getRadius() + b2.getRadius());
+        sliderDistance.setShowTickLabels(true);
         sliderDistance.setOnMouseReleased(e -> mouseReleased(e));
         HboxController = new HBox();
         HboxController.getChildren().addAll(btnPlay, btnPause, 
                                             timeSliderLabel, sliderDeltaTime,
                                             distanceSliderLabel, sliderDistance);
-        HboxController.setSpacing(10);
+        HboxController.setSpacing(15);
         
         btnForce = new Button("FORCE(N)= ");
         btnForce.setOnAction(e -> actionPerformed(e));
@@ -91,7 +93,7 @@ public class GraphicPane extends BorderPane{
         bottomToolbar = new HBox();
         bottomToolbar.setAlignment(Pos.CENTER);
         bottomToolbar.setId("bottomToolbar");
-        bottomToolbar.setSpacing(30);
+        bottomToolbar.setSpacing(40);
         bottomToolbar.setPadding(new Insets(10, 12, 10, 12));
         bottomToolbar.getChildren().addAll(HboxController, forceHbox);
         this.setBottom(bottomToolbar);

@@ -23,14 +23,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextFlow;
 import javafx.stage.Popup;
-import javafx.util.Duration;
 
 
 public class NewtonLawOfGravity extends Application {
@@ -70,61 +69,41 @@ public class NewtonLawOfGravity extends Application {
         ScrollPane scrollText = new ScrollPane();
         TextFlow textPane = new TextFlow();
         textPane.setId("textPane");
-        textPane.setPrefWidth(200);
+        textPane.setPrefWidth(220);
         
-        Text aboutTitle = new Text();
-        aboutTitle.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-                + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"
-                + " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
-                + " reprehenderit in voluptate velit esse cillum dolore eu fugiat "
-                + "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
-                + "sunt in culpa qui officia deserunt mollit anim id est laborum.\n"
-                + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
+        Text title = new Text("PALE BLUE DOT\n\n\n");
+        title.setStyle("-fx-font-weight: bold;");
+        title.setFont(Font.font ("Verdana", 18));
+        Text editBody = new Text("TO EDIT BODY: \n");
+        //editBody.setStyle("-fx-font-weight: bold;");
+        
+        Text instruction = new Text();
+        instruction.setText(
+                "1. Click the body.\n"
+                + "2. Enter desirable values (MUST BE A POSTIVE RATIONAL NUMBER).\n"
+                + "3. Save and close the window.\n\n"
                 
-                + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-                + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"
-                + " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
-                + " reprehenderit in voluptate velit esse cillum dolore eu fugiat "
-                + "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
-                + "sunt in culpa qui officia deserunt mollit anim id est laborum.\n"
-               
-                + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-                + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"
-                + " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
-                + " reprehenderit in voluptate velit esse cillum dolore eu fugiat "
-                + "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
-                + "sunt in culpa qui officia deserunt mollit anim id est laborum.\n"
+                + "*Force will be calculated automatically. If not, press 'GET FORCE' button.\n\n "
                 
-                + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-                + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"
-                + " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
-                + " reprehenderit in voluptate velit esse cillum dolore eu fugiat "
-                + "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
-                + "sunt in culpa qui officia deserunt mollit anim id est laborum.\n"
+                + "**Use 'SPEED SLIDER' to fast forward or slow down the animation.\n "
+                + "**At 0 adjustment, the animation is playing the ACTUAL PERIOD.\n\n"
                 
-                + "Lorem ipsum dolor sit amet, consectetur adipiscing elit, "
-                + "sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-                + "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris"
-                + " nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in"
-                + " reprehenderit in voluptate velit esse cillum dolore eu fugiat "
-                + "nulla pariatur. Excepteur sint occaecat cupidatat non proident, "
-                + "sunt in culpa qui officia deserunt mollit anim id est laborum.\n");
-        textPane.getChildren().add(aboutTitle);
+                + "***Use 'DISTANCE SLIDER' to adjust the distance between 2 bodies.\n"
+                + "***The smallest distance is the SUM of their radiuses, max distance "
+                + "will be limited by the width of the animation pane (1000)");
+        textPane.getChildren().addAll(title, editBody, instruction);
         scrollText.setContent(textPane);
       
       /********************************BIG GENERAL PANE****************************/ 
         BorderPane bigPane = new BorderPane();
-        bigPane.setPrefSize(1200, 650);
-        bigPane.setMinSize(1200, 650);
-        bigPane.setMinSize(1200, 650);
+        bigPane.setPrefSize(1220, 650);
+        bigPane.setMinSize(1220, 650);
+        bigPane.setMinSize(1220, 650);
         bigPane.setCenter(graphicPane);
         bigPane.setRight(scrollText);
         //bigPane.setBottom(bottomBar);
 
-        Scene scene = new Scene(bigPane, 1200, 650);
+        Scene scene = new Scene(bigPane, 1220, 650);
         scene.getStylesheets().add
                      (NewtonLawOfGravity.class.getResource("newtonsLaw.css").toExternalForm());
         primaryStage.setTitle("Pale Blue Dot");
@@ -132,138 +111,7 @@ public class NewtonLawOfGravity extends Application {
         primaryStage.show();
     }
  
-    /*
-    
-  << Calculate and return the appropriate period (orbiting speed) >>
-    public static double getPeriod(){      
-      // compare to find the larger mass
-        if(mass1 > mass2){
-            bigM = mass1;
-        }
-        else{
-            bigM = mass2;
-        }
-        
-      // calc period in seconds
-        double p = (2*Math.PI) * Math.sqrt(Math.pow(distance, 3)/(bigM * BIG_G));     
-        return p;
-    }
-    */
-    //--
-    
-    /*<< Controlling the time slider to speed up/slow down period >>*/
-    /*
-    public void mouseReleased(MouseEvent e){
-        System.out.println(e.getSource());
-        if(e.getSource().equals(sliderDeltaTime)){
-            //++ TODO Clean up      
-            deltaTime = sliderDeltaTime.getValue();
-            /*---System.out.println("Delta Time mouseReleased: " + deltaTime 
-                + " Period mouseReleased: " + period);---*/
 
-          //++ TODO adj. Duration.millis(period * 1000 / deltaTime) 
-          //++based on how the slider value is recorded
-    /*
-            if(deltaTime == 0){
-                pathTransition.setDuration(Duration.millis(period * 1000));
-            }
-            else{
-                pathTransition.setDuration(Duration.millis((period * 1000) /  (period * deltaTime)));
-            }
-            System.out.println("Duration after adjusted with slider: " + (period * 1000) /  (period * deltaTime));
-            pathTransition.playFromStart();
-        }
-        //-- this can be deleted
-       /* else if(e.getSource().getClass().equals(Body.class)){
-            if(e.getSource().equals(b1)){
-                // popup window to adjust the values of body 1
-                System.out.println("Body1");
-                
-                testStage.setTitle("Body1 Values");
-                massValue.setText(Double.toString(b1.getMass()));
-                testStage.showAndWait();
-                
-            }
-            else if(e.getSource().equals(b2)){
-                // popup window to adjust the values of body 2
-                System.out.println("Body2");
-                
-                testStage.setTitle("Body2 Values");
-                massValue.setText(Double.toString(b2.getMass()));
-                testStage.showAndWait();
-            }
-        }*/
-    /*
-    }
-    */
-    
-    /*<< So far: controlling buttons: Calculate, Play, and Pause >>
-    public void actionPerformed(ActionEvent e){
-      /******************FOR btnCalc/CALCULATING FORCE******************
-        if(e.getSource() == btnCalc){
-            try{
-                
-                if(Double.parseDouble(m1Txt.getText()) <= 0 
-                    || Double.parseDouble(m2Txt.getText()) <= 0){
-                    throw new InvalidValueException();
-                }  
-                
-                else {
-                    mass1 = Double.parseDouble(m1Txt.getText());
-                    mass2 = Double.parseDouble(m2Txt.getText());
-                    distance = sliderR.getValue();
-                    force = (BIG_G*mass1*mass2)/Math.pow(distance, 2);
-                    lbAnswer.setText("" + force);                  
-                }
-            }
-            catch(InvalidValueException ex){
-                ex.toString();
-                lbError.setText("Values have to be integer or double, "
-                        + "and cannot be zero or negative ");
-            }
-        }
-      /*****************************************************************
-        
-        else if(e.getSource() == btnPlay){
-            playbtnPerformed();
-        }
-        else if(e.getSource() == btnPause){
-            pathTransition.pause();
-        }
-    }*/
-    
-    
-    /*<< Exclusively used to control Play button >>
-    public static void playbtnPerformed(){
-        if(m1Txt.getText().equals("") || m2Txt.getText().equals("")){
-            mass1 = DEFAULT_MASS_1;
-            mass2 = DEFAULT_MASS_2;
-            m1Txt.setText("" + DEFAULT_MASS_1);
-            m2Txt.setText("" + DEFAULT_MASS_2);
-            distance = sliderR.getValue();
-            force = (BIG_G*mass1*mass2)/Math.pow(distance, 2);
-            lbAnswer.setText("" + force);
-            
-            period = getPeriod();
-            /*---System.out.println("Period: " + period);
-            System.out.println("Big mass: " + bigM);
-            System.out.println("Distance: " + distance);---
-           
-        }
-        else{
-            mass1 = Double.parseDouble(m1Txt.getText());
-            mass2 = Double.parseDouble(m2Txt.getText());
-            
-            period = getPeriod();
-        }
-        
-      //++ TODO adj. Duration.millis(period * 1000 / deltaTime) based on how the slider value is recorded
-        pathTransition.setDuration(Duration.millis((period * 1000) /  (period * deltaTime)));
-        System.out.println("Duration after hit play button: " + (period * 1000) /  (period * deltaTime));
-        pathTransition.play();
-    }*/
-    
- 
     public static void main(String[] args) {
         launch(args);
     }

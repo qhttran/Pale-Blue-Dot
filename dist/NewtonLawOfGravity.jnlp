@@ -8,7 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-    <jar href="NewtonLawOfGravity.jar" size="890735" download="eager" />
+    <jar href="NewtonLawOfGravity.jar" size="891672" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="NewtonLawOfGravity" >
     <param name="requiredFXVersion" value="8.0+"/>
